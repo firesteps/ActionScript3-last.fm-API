@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>fm.last</groupId>
+	<artifactId>as3api</artifactId>
+	<version>1.0</version>
+
+	<packaging>swc</packaging>
+
+	<properties>
+		<flexmojos.version>3.7.1</flexmojos.version>
+		<flex.version>4.1.0.16076</flex.version>
+	</properties>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.4.3</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.sonatype.flexmojos</groupId>
+				<artifactId>flexmojos-maven-plugin</artifactId>
+				<version>${flexmojos.version}</version>
+				<extensions>true</extensions>
+
+<!--
+				<configuration>
+					<attach>true</attach>
+					<mainTitle>Last.fm api documentation</mainTitle>
+					<windowTitle>Last.fm api documentation</windowTitle>
+				</configuration>
+
+				<executions>
+					<execution>
+						<goals>
+							<goal>asdoc</goal>
+							<goal>sources</goal>
+						</goals>
+						<configuration>
+							<examplesPath>examples</examplesPath>
+						</configuration>
+					</execution>
+				</executions>
+-->
+
+				<dependencies>
+					<dependency>
+						<groupId>com.adobe.flex</groupId>
+						<artifactId>compiler</artifactId>
+						<version>${flex.version}</version>
+						<type>pom</type>
+					</dependency>
+				</dependencies>
+				
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>flexmojos-repository</id>
+			<url>http://repository.sonatype.org/content/groups/flexgroup/</url>
+		</repository>
+		<repository>
+		  <id>mate-repository</id>
+		  <url>http://mate-framework.googlecode.com/svn/trunk/maven</url>
+	  </repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>flexmojos-repository</id>
+			<url>http://repository.sonatype.org/content/groups/flexgroup/</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.adobe.flex.framework</groupId>
+			<artifactId>flex-framework</artifactId>
+			<version>${flex.version}</version>
+			<scope>compile</scope>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>com.asfusion.mate</groupId>
+			<artifactId>mate-framework</artifactId>
+			<version>0.8.9</version>
+			<type>swc</type>
+		</dependency>
+	</dependencies>
+</project>
