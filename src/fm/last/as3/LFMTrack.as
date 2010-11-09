@@ -321,6 +321,81 @@ public class LFMTrack extends LFMBase {
 		});
 	}
 	
+	
+	/**
+	 * Used to add a track-play to a user's profile. Scrobble a track, or a batch of 
+	 * tracks. Maximum is 50 scrobbles per batch. It is important to not use the corrections 
+	 * returned by the now playing service as input for the scrobble request, unless 
+	 * they have been explicitly approved by the user. 
+	 * 
+	 * @param tracks array of track objects returned by <code>LFMTrack.trackToScrobble()</code>
+	 *  method.
+	 * @return loader load response
+	 */
+	public function scrobble(tracks:Array):URLLoader{
+		var variables:Object = new Object;
+		variables.method = 'track.scrobble';
+		for (var i:int = 0; i < tracks.length; i++){
+			var track:Object = tracks[i];
+			variables['track[' 		+ i + ']'] = track.track;
+			variables['timestamp[' 	+ i + ']'] = track.timestamp;
+			variables['artist[' 	+ i + ']'] = track.artist;
+			if (track.album)
+				variables['album[' 	+ i + ']'] = track.album;
+			if (!isNaN(track.duratioin))
+				variables['duration[' + i + ']'] = track.duration;
+			if (track.streamId)
+				variables['streamId[' + i + ']'] = track.streamId;
+			if (track.mbid)
+				variables['mbid[' + i + ']'] = track.mbid;
+			if (track.albumArtist)
+				variables['albumArtist[' + i + ']'] = track.albumArtist;
+			if (track.trackNumber)
+				variables['trackNumber[' + i + ']'] = track.trackNumber;
+			if (track.context)
+				variables['context[' + i + ']'] = track.context;
+		}
+		return authenticatedCall(variables);
+	}
+	
+	/**
+	 * Create track object for passing to <code>track.scrobble</code> method.
+	 * 
+	 * @param track the track name.
+	 * @param timestamp the time the track started playing, in UNIX 
+	 *  timestamp format (integer number of seconds since 00:00:00, January 1st 1970 UTC). 
+	 *  This must be in the UTC time zone.
+	 * @param artist the artist name.
+	 * @param album the album name.
+	 * @param albumArtist the album artist - if this differs from the 
+	 *  track artist.
+	 * @param context sub-client version (not public, only enabled for 
+	 *  certain API keys)
+	 * @param streamId the stream id for this track received from 
+	 *  the radio.getPlaylist service.
+	 * @param trackNumber the track number of the track on the album.
+	 * @param mbid the MusicBrainz Track ID.
+	 * @param duration the length of the track in seconds.
+	 * @return track
+	 */
+	public static function trackToScrobble(artist:String, track:String, timestamp:Date,
+										   album:String = null, duration:Number = NaN, 
+										   streamId:String = null, mbid:String = null, 
+										   albumArtist:String = null, trackNumber:Number = NaN, 
+										   context:String = null):Object{
+		return {
+			artist:artist,
+			track:track,
+			timestamp:Math.floor(timestamp.getTime()/1000),
+			album:album,
+			duration:duration,
+			streamId:streamId,
+			mbid:mbid,
+			albumArtist:albumArtist,
+			trackNumber:trackNumber,
+			contex:context
+		};
+	}
 	/**
 	 * Search for a track by track name. Returns track matches sorted by relevance.
 	 * @param artist the artist name in question.
@@ -397,6 +472,42 @@ public class LFMTrack extends LFMBase {
 			track:track,
 			artist:artist
 		});
+	}
+	
+	/**
+	 * Used to notify Last.fm that a user has started listening to a track. 
+	 * 
+	 * @param track the track name.
+	 * @param artist the artist name.
+	 * @param album the album name.
+	 * @param albumArtist the album artist - if this differs from the track artist.
+	 * @param context sub-client version (not public, only enabled for certain API keys)
+	 * @param trackNumber the track number of the track on the album.
+	 * @param mbid the MusicBrainz Track ID.
+	 * @param duration the length of the track in seconds.
+	 * @return loader load response.
+	 */
+	public function updateNowPlaying(track:String, artist:String, 
+									 album:String = null, albumArtist:String = null, 
+									 context:String = null, trackNumber:Number = NaN,
+									 mbid:String = null, duration:Number = NaN):URLLoader{
+		var variables:Object = new Object();
+		variables.method = 'track.updateNowPlaying';
+		variables.track = track;
+		variables.artist = artist;
+		if (album)
+			variables.album = album;
+		if (albumArtist)
+			variables.albumArtist = albumArtist;
+		if (context)
+			variables.context = context;
+		if (!isNaN(trackNumber))
+			variables.trackNumber = trackNumber;
+		if (mbid)
+			variables.mbid = mbid;
+		if (!isNaN(duration))
+			variables.duration = duration;
+		return authenticatedCall(variables);
 	}
 }
 }

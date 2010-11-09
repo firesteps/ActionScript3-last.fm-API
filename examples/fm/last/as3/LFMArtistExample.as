@@ -18,7 +18,7 @@ package{
 			var artist:LFMArtist = new LFMArtist(_session);
 			
 			addListeners(artist.getEvents('Cher'));
-			addListeners(artist.getImages('Cher'));//TODO: wtf???
+			addListeners(artist.getImages('Cher'));
 			addListeners(artist.getInfo('Cher'));
 			addListeners(artist.getPastEvents('Cher'));
 			addListeners(artist.getPodcast('Cher'));
